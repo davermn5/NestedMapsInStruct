@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+	"text/template"
+)
 
 type Stats struct {
 	cnt      int
@@ -14,6 +18,11 @@ type Events struct {
 
 type Event struct {
 	value int64
+}
+
+type Foo struct {
+	I int
+	S string
 }
 
 func main() {
@@ -35,4 +44,17 @@ func main() {
 	stats.category["aa"].event["bb"].value = 99 //And finally assign the actual in64 value type (99) to the "value" field name
 
 	fmt.Println(stats.cnt, stats.category["aa"].event["bb"].value)
+
+	var m = map[int]Foo{
+		7: {6 * 9, "Question"},
+		3: {42, "Answer"},
+	}
+
+	// Get the 2nd record (index=3) and parse it to screen using Templates' New() method expression.
+	tmpl, err := template.New("innovative").Parse("{{.I}} is the integer and {{.S}} is the string")
+	if err != nil {
+		panic(err)
+	}
+	err = tmpl.Execute(os.Stdout, m[3])
+
 }
